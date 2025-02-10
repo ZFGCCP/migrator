@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+  <properties resource="application.properties"/>
+  <context id="zfgc3_context" targetRuntime="MyBatis3">
+
+    <jdbcConnection connectionURL="jdbc:mysql://localhost:3600/zfgc"
+    				driverClass="com.mysql.cj.jdbc.Driver"
+    				password=""
+    				userId="root"/>
+    				
+    <javaModelGenerator targetPackage="com.zfgc.zfgbb.smf.dbo" targetProject="zfgbb">
+    </javaModelGenerator>
+    <sqlMapGenerator targetPackage="com.zfgc.zfgbb.smf.mappers" targetProject="zfgbb">
+    </sqlMapGenerator>
+    <javaClientGenerator targetPackage="com.zfgc.zfgbb.smf.mappers" targetProject="zfgbb" type="XMLMAPPER" />
+    
+
+    <!-- tables -->
+
+	<table tableName="smf_1members" domainObjectName="SMFMembersDb">
+	
+	</table>
+
+    <!-- <table schema="zfgbb" tableName="content_resource" domainObjectName="ContentResourceDbo">
+		<generatedKey column="content_resource_id" sqlStatement="JDBC" identity="true" />
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
+    </table> -->
+    
+  
+  </context>
+</generatorConfiguration>
