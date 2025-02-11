@@ -5,23 +5,38 @@
   <properties resource="application.properties"/>
   <context id="zfgc3_context" targetRuntime="MyBatis3">
 
-    <jdbcConnection connectionURL="jdbc:mysql://localhost:3600/zfgc"
+    <jdbcConnection connectionURL="jdbc:mysql://localhost:3306/zfgc"
     				driverClass="com.mysql.cj.jdbc.Driver"
     				password=""
     				userId="root"/>
     				
-    <javaModelGenerator targetPackage="com.zfgc.zfgbb.smf.dbo" targetProject="zfgbb">
+    <javaModelGenerator targetPackage="com.zfgc.zfgbb.migrator.smf.dbo" targetProject="migrator">
     </javaModelGenerator>
-    <sqlMapGenerator targetPackage="com.zfgc.zfgbb.smf.mappers" targetProject="zfgbb">
+    <sqlMapGenerator targetPackage="com.zfgc.zfgbb.migrator.smf.mappers" targetProject="migrator">
     </sqlMapGenerator>
-    <javaClientGenerator targetPackage="com.zfgc.zfgbb.smf.mappers" targetProject="zfgbb" type="XMLMAPPER" />
+    <javaClientGenerator targetPackage="com.zfgc.zfgbb.migrator.smf.mappers" targetProject="migrator" type="XMLMAPPER" />
     
 
     <!-- tables -->
-
-	<table tableName="smf_1members" domainObjectName="SMFMembersDb">
-	
+    <table tableName="smf_1boards" domainObjectName="SMFBoardDb">
+		<columnOverride column="id_board" jdbcType="SMALLINT" javaType="java.lang.Integer"/>
+		<columnOverride column="id_cat" jdbcType="TINYINT" javaType="java.lang.Integer"/>
+		<columnOverride column="id_parent" jdbcType="SMALLINT" javaType="java.lang.Integer"/>
 	</table>
+    
+	<!-- <table tableName="smf_1categories" domainObjectName="SMFCategoryDb">
+		<columnOverride column="id_cat" jdbcType="TINYINT" javaType="java.lang.Integer"/>
+	</table> -->
+
+
+	<!-- <table tableName="smf_1members" domainObjectName="SMFMembersDb">
+		<columnOverride column="id_group" jdbcType="SMALLINT" javaType="java.lang.Integer"/>
+		<columnOverride column="instant_messages" jdbcType="SMALLINT" javaType="java.lang.Integer"/>
+		<columnOverride column="unread_messages" jdbcType="SMALLINT" javaType="java.lang.Integer"/>
+		<columnOverride column="karma_bad" jdbcType="SMALLINT" javaType="java.lang.Integer"/>
+		<columnOverride column="karma_good" jdbcType="SMALLINT" javaType="java.lang.Integer"/>
+		<columnOverride column="id_post_group" jdbcType="SMALLINT" javaType="java.lang.Integer"/>
+	</table> -->
 
     <!-- <table schema="zfgbb" tableName="content_resource" domainObjectName="ContentResourceDbo">
 		<generatedKey column="content_resource_id" sqlStatement="JDBC" identity="true" />

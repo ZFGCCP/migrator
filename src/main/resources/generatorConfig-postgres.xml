@@ -5,21 +5,41 @@
   <properties resource="application.properties"/>
   <context id="zfgc3_context" targetRuntime="MyBatis3">
 
-    <jdbcConnection connectionURL="jdbc:postgresql://localhost:5432/zfgc_dev"
+    <jdbcConnection connectionURL="jdbc:postgresql://localhost:5432/zfgbb"
     				driverClass="org.postgresql.Driver"
     				password="postgres"
     				userId="postgres"/>
     				
-    <javaModelGenerator targetPackage="com.zfgc.zfgbb.dbo" targetProject="zfgbb">
+    <javaModelGenerator targetPackage="com.zfgc.zfgbb.migrator.db" targetProject="migrator">
     </javaModelGenerator>
-    <sqlMapGenerator targetPackage="com.zfgc.zfgbb.mappers" targetProject="zfgbb">
+    <sqlMapGenerator targetPackage="com.zfgc.zfgbb.migrator.mappers" targetProject="migrator">
     </sqlMapGenerator>
-    <javaClientGenerator targetPackage="com.zfgc.zfgbb.mappers" targetProject="zfgbb" type="XMLMAPPER" />
+    <javaClientGenerator targetPackage="com.zfgc.zfgbb.migrator.mappers" targetProject="migrator" type="XMLMAPPER" />
     
 
     <!-- tables -->
-    <table schema="zfgbb" tableName="child_board_view" domainObjectName="ChildBoardViewDbo">
+    <table schema="zfgbb" tableName="thread" domainObjectName="ThreadDbo">
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
     </table>
+   
+     <table schema="zfgbb" tableName="BOARD" domainObjectName="BoardDbo">
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
+    </table>
+    
+    <table schema="zfgbb" tableName="category" domainObjectName="CategoryDbo">
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
+    </table>
+    
+    <!-- <table schema="zfgbb" tableName="user" domainObjectName="UserDbo">
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
+    </table> -->
+    
+    <!-- <table schema="zfgbb" tableName="child_board_view" domainObjectName="ChildBoardViewDbo">
+    </table> -->
     
     <!-- <table schema="zfgbb" tableName="board_summary" domainObjectName="BoardSummaryViewDbo">
 		<columnOverride column="latest_message_created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime"/>
@@ -77,13 +97,7 @@
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
     </table> -->
-    
-    <!-- <table schema="zfgbb" tableName="user" domainObjectName="UserDbo">
-		<generatedKey column="user_id" sqlStatement="JDBC" identity="true" />
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-    </table> -->
-    
+
     <!-- <table schema="zfgbb" tableName="current_message_view" domainObjectName="CurrentMessageDbo">
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime"/>
     </table> -->
@@ -138,24 +152,6 @@
    
    <!-- <table schema="zfgbb" tableName="user" domainObjectName="UserDbo">
 		<generatedKey column="user_ID" sqlStatement="JDBC" identity="true" />
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-    </table> -->
-   
-   	<!-- <table schema="zfgbb" tableName="thread" domainObjectName="ThreadDbo">
-		<generatedKey column="thread_ID" sqlStatement="JDBC" identity="true" />
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-    </table> -->
-   
-     <!-- <table schema="zfgbb" tableName="BOARD" domainObjectName="BoardDbo">
-		<generatedKey column="BOARD_ID" sqlStatement="JDBC" identity="true" />
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-    </table> -->
-    
-    <!-- <table schema="zfgbb" tableName="category" domainObjectName="CategoryDbo">
-		<generatedKey column="category_id" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
     </table> -->
