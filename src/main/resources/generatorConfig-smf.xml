@@ -18,11 +18,22 @@
     
 
     <!-- tables -->
-    <table tableName="smf_1boards" domainObjectName="SMFBoardDb">
+    <table tableName="smf_1messages_history" domainObjectName="SMFMessageHistoryDb">
+		
+    </table>
+    
+    <!-- <table tableName="smf_1messages" domainObjectName="SMFMessageDb">
+		
+    </table> -->
+    <!-- <table tableName="smf_1topics" domainObjectName="SMFTopicDb">
+		
+    </table> -->
+    
+    <!-- <table tableName="smf_1boards" domainObjectName="SMFBoardDb">
 		<columnOverride column="id_board" jdbcType="SMALLINT" javaType="java.lang.Integer"/>
 		<columnOverride column="id_cat" jdbcType="TINYINT" javaType="java.lang.Integer"/>
 		<columnOverride column="id_parent" jdbcType="SMALLINT" javaType="java.lang.Integer"/>
-	</table>
+	</table> -->
     
 	<!-- <table tableName="smf_1categories" domainObjectName="SMFCategoryDb">
 		<columnOverride column="id_cat" jdbcType="TINYINT" javaType="java.lang.Integer"/>
