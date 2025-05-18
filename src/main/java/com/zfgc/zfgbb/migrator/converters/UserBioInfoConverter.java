@@ -4,16 +4,25 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.zfgc.zfgbb.migrator.db.AvatarDbo;
+import com.zfgc.zfgbb.migrator.db.AvatarDboExample;
 import com.zfgc.zfgbb.migrator.db.UserBioInfoDbo;
 import com.zfgc.zfgbb.migrator.db.UserDbo;
+import com.zfgc.zfgbb.migrator.mappers.AvatarDboMapper;
 import com.zfgc.zfgbb.migrator.mappers.UserBioInfoDboMapper;
+import com.zfgc.zfgbb.migrator.smf.dbo.SMFAttachmentsDb;
+import com.zfgc.zfgbb.migrator.smf.dbo.SMFAttachmentsDbExample;
 import com.zfgc.zfgbb.migrator.smf.dbo.SMFMembersDbExample;
 import com.zfgc.zfgbb.migrator.smf.dbo.SMFMembersDbWithBLOBs;
+import com.zfgc.zfgbb.migrator.smf.mappers.SMFAttachmentsDbMapper;
 import com.zfgc.zfgbb.migrator.smf.mappers.SMFMembersDbMapper;
 
 @Component
@@ -25,18 +34,65 @@ public class UserBioInfoConverter {
 	@Autowired
 	public UserBioInfoDboMapper bioInfoMapper;
 	
+	@Autowired
+	private SMFAttachmentsDbMapper smfAttachmentsDbMapper;
+	
+	@Autowired
+	private AvatarDboMapper avatarMapper;
+	
 	@Transactional
 	public Map<Integer,UserBioInfoDbo> convertToZfgbb() {
 		List<SMFMembersDbWithBLOBs> SMFMembers = smfMembersMapper.selectByExampleWithBLOBs(new SMFMembersDbExample());
 		Map<Integer,UserBioInfoDbo> result = new HashMap<>();
 		
+		SMFAttachmentsDbExample avatarEx = new SMFAttachmentsDbExample();
+		avatarEx.createCriteria().andIdMemberIsNotNull()
+								 .andIdMemberNotEqualTo(0);
+		Map<Integer,SMFAttachmentsDb> SMFAvatarAttachments = 
+				smfAttachmentsDbMapper.selectByExample(avatarEx).stream()
+									  .collect(Collectors.toMap(SMFAttachmentsDb::getIdMember, Function.identity()));
+																						
+		
 		SMFMembers.forEach((smfMember) -> {
+			//create the avatar first if one exists for the user
+			AvatarDbo avatar = new AvatarDbo();
+			SMFAttachmentsDb smfAvatar = SMFAvatarAttachments.get(smfMember.getIdMember());
+			if(smfAvatar != null || !smfMember.getAvatar().equals("")) {
+				avatar.setUrl(smfMember.getAvatar());
+				avatar.setActiveFlag(true);
+				
+				if(smfAvatar != null) {
+					avatar.setActiveFlag(smfAvatar.getApproved() == 1);
+					avatar.setFilename(smfAvatar.getFilename());
+				}
+				
+				try {
+					avatar.setMigrationHash(avatar.computeHash());
+				} catch (NoSuchAlgorithmException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				AvatarDboExample avEx = new AvatarDboExample();
+				avEx.createCriteria().andMigrationHashEqualTo(avatar.getMigrationHash());
+				Optional<AvatarDbo> existingAvatar = avatarMapper.selectByExample(avEx).stream().findFirst();
+				
+				existingAvatar.ifPresentOrElse((existing) -> {
+					avatar.setAvatarId(existing.getAvatarId());
+					avatarMapper.updateByPrimaryKey(avatar);
+				},
+				() -> {
+					avatarMapper.insert(avatar);
+				});
+			}
+			
 			UserBioInfoDbo user = new UserBioInfoDbo();
 			
 			user.setUserId(smfMember.getIdMember());
 			user.setCustomTitle(smfMember.getUsertitle());
 			user.setPersonalText(smfMember.getPersonalText());
 			user.setSignature(smfMember.getSignature());
+			user.setAvatarId(avatar.getAvatarId());
 			
 			try {
 				user.setMigrationHash(user.computeHash());
