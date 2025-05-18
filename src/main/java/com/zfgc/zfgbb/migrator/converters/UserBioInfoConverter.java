@@ -14,9 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.zfgc.zfgbb.migrator.db.AvatarDbo;
 import com.zfgc.zfgbb.migrator.db.AvatarDboExample;
+import com.zfgc.zfgbb.migrator.db.ContentResourceDbo;
+import com.zfgc.zfgbb.migrator.db.ContentResourceDboExample;
 import com.zfgc.zfgbb.migrator.db.UserBioInfoDbo;
 import com.zfgc.zfgbb.migrator.db.UserDbo;
 import com.zfgc.zfgbb.migrator.mappers.AvatarDboMapper;
+import com.zfgc.zfgbb.migrator.mappers.ContentResourceDboMapper;
 import com.zfgc.zfgbb.migrator.mappers.UserBioInfoDboMapper;
 import com.zfgc.zfgbb.migrator.smf.dbo.SMFAttachmentsDb;
 import com.zfgc.zfgbb.migrator.smf.dbo.SMFAttachmentsDbExample;
@@ -40,6 +43,9 @@ public class UserBioInfoConverter {
 	@Autowired
 	private AvatarDboMapper avatarMapper;
 	
+	@Autowired
+	private ContentResourceDboMapper contentMapper;
+	
 	@Transactional
 	public Map<Integer,UserBioInfoDbo> convertToZfgbb() {
 		List<SMFMembersDbWithBLOBs> SMFMembers = smfMembersMapper.selectByExampleWithBLOBs(new SMFMembersDbExample());
@@ -62,8 +68,35 @@ public class UserBioInfoConverter {
 				avatar.setActiveFlag(true);
 				
 				if(smfAvatar != null) {
+					//if the avatar is a user uploaded avatar, create/update content resource record
+					ContentResourceDbo contentResource = new ContentResourceDbo();
+					contentResource.setContentTypeId(1);
+					contentResource.setFilename(smfAvatar.getFilename());
+					contentResource.setFileExt(smfAvatar.getFileext());
+					contentResource.setMimeType(smfAvatar.getMimeType());
+					contentResource.setChecksum(smfAvatar.getFileHash());
+					contentResource.setUploadedUserId(smfMember.getIdMember());
+					try {
+						contentResource.setMigrationHash(contentResource.computeHash());
+					} catch (NoSuchAlgorithmException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					ContentResourceDboExample resourceEx = new ContentResourceDboExample();
+					resourceEx.createCriteria().andMigrationHashEqualTo(contentResource.getMigrationHash());
+					Optional<ContentResourceDbo> existingResource = contentMapper.selectByExample(resourceEx).stream().findFirst();
+					
+					existingResource.ifPresentOrElse(existing -> {
+						contentResource.setContentResourceId(existing.getContentResourceId());
+						contentMapper.updateByPrimaryKey(contentResource);
+					}, 
+					() -> {
+						contentMapper.insert(contentResource);
+					});
+					
+					avatar.setContentResourceId(contentResource.getContentResourceId());
 					avatar.setActiveFlag(smfAvatar.getApproved() == 1);
-					avatar.setFilename(smfAvatar.getFilename());
 				}
 				
 				try {
