@@ -18,9 +18,13 @@
     
 
     <!-- tables -->
-    <table tableName="smf_1messages_history" domainObjectName="SMFMessageHistoryDb">
+    <table tableName="smf_1attachments" domainObjectName="SMFAttachmentsDb">
 		
     </table>
+    
+    <!-- <table tableName="smf_1messages_history" domainObjectName="SMFMessageHistoryDb">
+		
+    </table> -->
     
     <!-- <table tableName="smf_1messages" domainObjectName="SMFMessageDb">
 		
