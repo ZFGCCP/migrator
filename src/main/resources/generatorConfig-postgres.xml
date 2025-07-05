@@ -19,11 +19,15 @@
 
     <!-- tables -->
     <table schema="zfgbb" tableName="content_resource" domainObjectName="ContentResourceDbo">
-    	<generatedKey column="content_resource_id" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
     </table>
     
+    <table schema="zfgbb" tableName="file_attachments" domainObjectName="FileAttachmentDbo">
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
+    </table>
+
     <!-- <table schema="zfgbb" tableName="avatar" domainObjectName="AvatarDbo">
     	<generatedKey column="avatar_id" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
