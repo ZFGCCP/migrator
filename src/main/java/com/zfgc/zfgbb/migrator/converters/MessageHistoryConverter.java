@@ -92,8 +92,7 @@ public class MessageHistoryConverter {
 					}
 					
 					MessageHistoryDboExample ex = new MessageHistoryDboExample();
-					ex.createCriteria().andMigrationHashEqualTo(currentMsg.getMigrationHash())
-									   .andMessageHistoryIdEqualTo(currentMsg.getMessageHistoryId());
+					ex.createCriteria().andMessageHistoryIdEqualTo(currentMsg.getMessageHistoryId());
 					MessageHistoryDbo existingMsg = msgHistoryMapper.selectByExample(ex).stream().findFirst().orElse(null);
 					if(existingMsg == null) {
 						msgHistoryMapper.insert(currentMsg);

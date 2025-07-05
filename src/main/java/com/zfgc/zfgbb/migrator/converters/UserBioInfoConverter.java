@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -58,7 +59,7 @@ public class UserBioInfoConverter {
 				smfAttachmentsDbMapper.selectByExample(avatarEx).stream()
 									  .collect(Collectors.toMap(SMFAttachmentsDb::getIdMember, Function.identity()));
 																						
-		
+		AtomicInteger contentId = new AtomicInteger(1);
 		SMFMembers.forEach((smfMember) -> {
 			//create the avatar first if one exists for the user
 			AvatarDbo avatar = new AvatarDbo();
@@ -70,12 +71,14 @@ public class UserBioInfoConverter {
 				if(smfAvatar != null) {
 					//if the avatar is a user uploaded avatar, create/update content resource record
 					ContentResourceDbo contentResource = new ContentResourceDbo();
+					contentResource.setContentResourceId(contentId.getAndIncrement());
 					contentResource.setContentTypeId(1);
 					contentResource.setFilename(smfAvatar.getFilename());
 					contentResource.setFileExt(smfAvatar.getFileext());
 					contentResource.setMimeType(smfAvatar.getMimeType());
 					contentResource.setChecksum(smfAvatar.getFileHash());
 					contentResource.setUploadedUserId(smfMember.getIdMember());
+					contentResource.setFileSize(smfAvatar.getSize().longValue());
 					try {
 						contentResource.setMigrationHash(contentResource.computeHash());
 					} catch (NoSuchAlgorithmException e) {
@@ -84,12 +87,13 @@ public class UserBioInfoConverter {
 					}
 					
 					ContentResourceDboExample resourceEx = new ContentResourceDboExample();
-					resourceEx.createCriteria().andMigrationHashEqualTo(contentResource.getMigrationHash());
+					resourceEx.createCriteria().andContentResourceIdEqualTo(contentResource.getContentResourceId());
 					Optional<ContentResourceDbo> existingResource = contentMapper.selectByExample(resourceEx).stream().findFirst();
 					
 					existingResource.ifPresentOrElse(existing -> {
-						contentResource.setContentResourceId(existing.getContentResourceId());
-						contentMapper.updateByPrimaryKey(contentResource);
+						if(!existing.getMigrationHash().equals(contentResource.getMigrationHash())) {
+							contentMapper.updateByPrimaryKey(contentResource);
+						}
 					}, 
 					() -> {
 						contentMapper.insert(contentResource);

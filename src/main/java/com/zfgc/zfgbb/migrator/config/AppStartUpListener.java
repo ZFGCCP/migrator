@@ -5,6 +5,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import com.zfgc.zfgbb.migrator.converters.AttachmentsConverter;
 import com.zfgc.zfgbb.migrator.converters.BoardConverter;
 import com.zfgc.zfgbb.migrator.converters.CategoryConverter;
 import com.zfgc.zfgbb.migrator.converters.IpAddressConverter;
@@ -41,6 +42,9 @@ public class AppStartUpListener implements ApplicationListener<ContextRefreshedE
 	@Autowired
 	private UserBioInfoConverter bioInfoConverter;
 	
+	@Autowired
+	private AttachmentsConverter attachmentsConverter;
+	
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
          
@@ -58,5 +62,6 @@ public class AppStartUpListener implements ApplicationListener<ContextRefreshedE
         
         //phase 2
     	bioInfoConverter.convertToZfgbb();
+    	attachmentsConverter.convertToZfgbb();
     }
 }
