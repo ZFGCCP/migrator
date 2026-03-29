@@ -81,8 +81,10 @@ public class AppStartUpListener implements ApplicationListener<ContextRefreshedE
 		 */
         
         //phase 2
-	    bioInfoConverter.convertToZfgbb(); attachmentsConverter.convertToZfgbb();
-	    contactInfoConverter.convertToZfgbb(); pollConverter.convertToZfgbb();
+	    bioInfoConverter.convertToZfgbb(); 
+	    attachmentsConverter.convertToZfgbb();
+	    contactInfoConverter.convertToZfgbb(); 
+	    pollConverter.convertToZfgbb();
 	    pollChoiceConverter.convertToZfgbb();
 	    userPollChoiceConverter.convertToZfgbb();
 		karmaConverter.convertToZfgbb();
