@@ -9,6 +9,7 @@ import com.zfgc.zfgbb.migrator.converters.AttachmentsConverter;
 import com.zfgc.zfgbb.migrator.converters.BoardConverter;
 import com.zfgc.zfgbb.migrator.converters.CategoryConverter;
 import com.zfgc.zfgbb.migrator.converters.IpAddressConverter;
+import com.zfgc.zfgbb.migrator.converters.KarmaConverter;
 import com.zfgc.zfgbb.migrator.converters.MessageConverter;
 import com.zfgc.zfgbb.migrator.converters.MessageHistoryConverter;
 import com.zfgc.zfgbb.migrator.converters.PollChoiceConverter;
@@ -60,6 +61,9 @@ public class AppStartUpListener implements ApplicationListener<ContextRefreshedE
 	
 	@Autowired
 	private UserPollChoiceConverter userPollChoiceConverter;
+
+	@Autowired
+	private KarmaConverter karmaConverter;
 	
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -77,11 +81,12 @@ public class AppStartUpListener implements ApplicationListener<ContextRefreshedE
 		 */
         
         //phase 2
-    	bioInfoConverter.convertToZfgbb();
-    	attachmentsConverter.convertToZfgbb();
-    	contactInfoConverter.convertToZfgbb();
-    	pollConverter.convertToZfgbb();
-    	pollChoiceConverter.convertToZfgbb();
-    	userPollChoiceConverter.convertToZfgbb();
+	    bioInfoConverter.convertToZfgbb(); 
+	    attachmentsConverter.convertToZfgbb();
+	    contactInfoConverter.convertToZfgbb(); 
+	    pollConverter.convertToZfgbb();
+	    pollChoiceConverter.convertToZfgbb();
+	    userPollChoiceConverter.convertToZfgbb();
+		karmaConverter.convertToZfgbb();
     }
 }
