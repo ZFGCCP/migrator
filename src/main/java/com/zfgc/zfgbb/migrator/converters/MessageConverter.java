@@ -34,7 +34,9 @@ public class MessageConverter {
 	
 	@Transactional
 	public Map<Integer,MessageDbo> convertToZfgbb() {
-		List<SMFMessageDbWithBLOBs> SMFMembers = smfMessageMapper.selectByExampleWithBLOBs(new SMFMessageDbExample());
+		SMFMessageDbExample smfEx = new SMFMessageDbExample();
+		smfEx.setOrderByClause("poster_time asc");
+		List<SMFMessageDbWithBLOBs> SMFMembers = smfMessageMapper.selectByExampleWithBLOBs(smfEx);
 		Map<Integer,MessageDbo> result = new HashMap<>();
 		Map<Integer, AtomicInteger> counts = new HashMap<>();
 		AtomicInteger totalCount = new AtomicInteger(1);
